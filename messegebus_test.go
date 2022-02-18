@@ -2,7 +2,7 @@ package messegebus_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	messegebus "gopkg.in/UsadaPeko/messaegbus"
+	"gopkg.in/UsadaPeko/messegbus"
 	"testing"
 )
 
