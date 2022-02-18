@@ -1,17 +1,17 @@
-package messegebus_test
+package messagebus_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/UsadaPeko/messegbus"
+	"gopkg.in/UsadaPeko/messagbus"
 	"testing"
 )
 
 func Test_PubSub_EmptyChan(t *testing.T) {
-	bus := messegebus.New()
+	bus := messagebus.New()
 
 	assert.NotPanics(t, func() {
 		bus.Pub(
-			messegebus.Message{
+			messagebus.Message{
 				ID:       "",
 				Metadata: "",
 			},
@@ -20,49 +20,49 @@ func Test_PubSub_EmptyChan(t *testing.T) {
 }
 
 func Test_PubSub(t *testing.T) {
-	message := messegebus.Message{
+	message := messagebus.Message{
 		ID:       "",
 		Metadata: "",
 	}
 	done := make(chan struct{})
 
-	channel := make(chan messegebus.Message)
-	go func(channel <-chan messegebus.Message) {
+	channel := make(chan messagebus.Message)
+	go func(channel <-chan messagebus.Message) {
 		msg := <-channel
 		assert.Equal(t, message.ID, msg.ID)
 		done <- struct{}{}
 	}(channel)
 
-	bus := messegebus.New(channel)
+	bus := messagebus.New(channel)
 
 	bus.Pub(message)
 
 	<-done
 }
 
-func Test_PubSub_EmptySub(t *testing.T) {
-	message := messegebus.Message{
+func Test_PubSub_MultiSub(t *testing.T) {
+	message := messagebus.Message{
 		ID:       "",
 		Metadata: "",
 	}
 	done := make(chan struct{})
 
 	// First Sub
-	channel1 := make(chan messegebus.Message)
-	go func(channel <-chan messegebus.Message) {
+	channel1 := make(chan messagebus.Message)
+	go func(channel <-chan messagebus.Message) {
 		msg := <-channel
 		assert.Equal(t, message.ID, msg.ID)
 		done <- struct{}{}
 	}(channel1)
 	// Second Sub
-	channel2 := make(chan messegebus.Message)
-	go func(channel <-chan messegebus.Message) {
+	channel2 := make(chan messagebus.Message)
+	go func(channel <-chan messagebus.Message) {
 		msg := <-channel
 		assert.Equal(t, message.ID, msg.ID)
 		done <- struct{}{}
 	}(channel2)
 
-	bus := messegebus.New(channel1, channel2)
+	bus := messagebus.New(channel1, channel2)
 
 	bus.Pub(message)
 
@@ -70,14 +70,14 @@ func Test_PubSub_EmptySub(t *testing.T) {
 	<-done
 }
 
-func Test_PubSub_MultiSub(t *testing.T) {
-	channel := make(chan messegebus.Message)
-	message := messegebus.Message{
+func Test_PubSub_EmptySub(t *testing.T) {
+	channel := make(chan messagebus.Message)
+	message := messagebus.Message{
 		ID:       "",
 		Metadata: "",
 	}
 
-	bus := messegebus.New(channel)
+	bus := messagebus.New(channel)
 
 	bus.Pub(message)
 }

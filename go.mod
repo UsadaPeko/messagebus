@@ -1,4 +1,4 @@
-module gopkg.in/UsadaPeko/messegbus
+module gopkg.in/UsadaPeko/messagbus
 
 go 1.17
 

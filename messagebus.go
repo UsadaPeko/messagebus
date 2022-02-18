@@ -1,4 +1,4 @@
-package messegebus
+package messagebus
 
 import "sync"
 
